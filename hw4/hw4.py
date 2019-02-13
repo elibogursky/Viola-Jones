@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as s
-import imageio as iio
 from skimage import io
+from PIL import Image
 import time
 from operator import itemgetter
 
@@ -10,7 +10,12 @@ def load_data(faces_dir, background_dir, num_images):
     images = []
     types = []
     for i in range(0, num_images):
-        img = io.imread(faces_dir +'face' + str(i) +'.jpg', as_grey=True)
+        img = np.array(Image.open(faces_dir +'face' + str(i) +'.jpg').convert('LA'))
+        print(img[0])
+        img2 = io.imread(faces_dir +'face' + str(i) +'.jpg', as_grey=True)
+        print(img)
+        print(img2)
+        print(img2.shape)
         images.append(img)
         types.append(1)
     for i in range(0, num_images):
@@ -155,11 +160,11 @@ def opt_weaklearner(int_img_rep, weights, feat_list, y_true):
 
 def viola_jones():
     start = time.time()
-    (imgs, y_true) = load_data('faces/', 'background/', 2)
+    (imgs, y_true) = load_data('faces/', 'background/', 1)
     print(time.time()-start)
     int_img_rep = compute_integral_image(imgs)
     print(time.time()-start)
-    feat_list = feature_list(64)
+    feat_list = feature_list(1)
     print(len(feat_list))
     print(time.time()-start)
     N = len(int_img_rep)
